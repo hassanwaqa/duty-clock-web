@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { DUTY_STATUS } from './constants'
-import { splitSegmentsByDay, sumDrivingMiles } from './time'
+import { splitSegmentsByDay, sumDrivingMiles, sumHoursByStatus } from './time'
 
 const TIMEZONE = 'America/Chicago'
 
@@ -30,11 +30,13 @@ describe('splitSegmentsByDay', () => {
     )
 
     expect(days.map((day) => day.dayKey)).toEqual(['2026-09-01', '2026-09-02'])
-    expect(days[0].segments[0]).toMatchObject({ startHour: 23, endHour: 24 })
-    expect(days[1].segments[0]).toMatchObject({ startHour: 0, endHour: 1 })
+    const firstDriving = days[0].segments.find((piece) => piece.status === DUTY_STATUS.DRIVING)
+    const secondDriving = days[1].segments.find((piece) => piece.status === DUTY_STATUS.DRIVING)
+    expect(firstDriving).toMatchObject({ startHour: 23, endHour: 24 })
+    expect(secondDriving).toMatchObject({ startHour: 0, endHour: 1 })
   })
 
-  it('fills gaps inside the trip window but leaves outside time unrecorded', () => {
+  it('fills the complete day with implied off-duty time outside planned segments', () => {
     const days = splitSegmentsByDay(
       [
         segment(),
@@ -46,16 +48,29 @@ describe('splitSegmentsByDay', () => {
       TIMEZONE,
     )
 
-    expect(days[0].segments).toHaveLength(3)
-    expect(days[0].segments[0]).toMatchObject({ startHour: 8, endHour: 9 })
-    expect(days[0].segments[0].implied).toBeUndefined()
-    expect(days[0].segments[1]).toMatchObject({
+    expect(days[0].segments).toHaveLength(5)
+    expect(days[0].segments[0]).toMatchObject({
+      status: DUTY_STATUS.OFF_DUTY,
+      startHour: 0,
+      endHour: 8,
+      implied: true,
+    })
+    expect(days[0].segments[1]).toMatchObject({ startHour: 8, endHour: 9 })
+    expect(days[0].segments[1].implied).toBeUndefined()
+    expect(days[0].segments[2]).toMatchObject({
       status: DUTY_STATUS.OFF_DUTY,
       startHour: 9,
       endHour: 10,
       implied: true,
     })
-    expect(days[0].segments[2]).toMatchObject({ startHour: 10, endHour: 11 })
+    expect(days[0].segments[3]).toMatchObject({ startHour: 10, endHour: 11 })
+    expect(days[0].segments[4]).toMatchObject({
+      status: DUTY_STATUS.OFF_DUTY,
+      startHour: 11,
+      endHour: 24,
+      implied: true,
+    })
+    expect(Object.values(sumHoursByStatus(days[0].segments)).reduce((sum, hours) => sum + hours, 0)).toBe(24)
   })
 
   it('prorates driving mileage across midnight without changing the trip total', () => {
@@ -70,8 +85,11 @@ describe('splitSegmentsByDay', () => {
       TIMEZONE,
     )
 
-    expect(days[0].segments[0].distance_miles).toBeCloseTo(60)
-    expect(days[1].segments[0].distance_miles).toBeCloseTo(60)
+    const drivingPieces = days.flatMap((day) => day.segments).filter(
+      (piece) => piece.status === DUTY_STATUS.DRIVING,
+    )
+    expect(drivingPieces[0].distance_miles).toBeCloseTo(60)
+    expect(drivingPieces[1].distance_miles).toBeCloseTo(60)
     expect(days.flatMap((day) => day.segments).reduce((sum, piece) => sum + piece.distance_miles, 0)).toBeCloseTo(120)
   })
 

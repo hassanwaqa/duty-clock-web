@@ -151,17 +151,21 @@ function impliedOffDuty(key, startHour, endHour, timezone) {
   }
 }
 
-function withInternalOffDuty(key, pieces, timezone) {
+function withImpliedOffDuty(key, pieces, timezone) {
   if (!pieces.length) return []
 
   const filled = []
-  let cursor = pieces[0].startHour
+  let cursor = 0
   for (const piece of pieces) {
     if (piece.startHour > cursor) {
       filled.push(impliedOffDuty(key, cursor, piece.startHour, timezone))
     }
     filled.push(piece)
     cursor = Math.max(cursor, piece.endHour)
+  }
+
+  if (cursor < HOURS_PER_SHEET) {
+    filled.push(impliedOffDuty(key, cursor, HOURS_PER_SHEET, timezone))
   }
 
   return filled
@@ -223,9 +227,9 @@ export function splitSegmentsByDay(segments = [], timezone = 'UTC') {
     .map(([key, pieces]) => ({
       dayKey: key,
       timezone,
-      // Time outside the planned trip is unknown, so only gaps bounded by
-      // reported plan segments are represented as off duty.
-      segments: withInternalOffDuty(
+      // A daily log covers all 24 hours. Time outside reported plan segments
+      // is shown as implied off duty and disclosed as a planning assumption.
+      segments: withImpliedOffDuty(
         key,
         [...pieces].sort((a, b) => a.startHour - b.startHour),
         timezone,

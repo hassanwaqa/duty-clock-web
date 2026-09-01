@@ -34,7 +34,8 @@ export default function LogSheet({ day, trip }) {
           variant="caption"
           sx={{ display: 'block', mt: 1.25, color: 'text.secondary' }}
         >
-          Periods outside the planned trip are not recorded; totals cover planned time only.
+          Off-duty time after trip completion is assumed for planning purposes; the same
+          assumption is used before the first planned event.
         </Typography>
 
         <Divider sx={{ my: 3 }} />
