@@ -8,13 +8,14 @@ import LoadingState from '../components/common/LoadingState'
 import LogSheetSet from '../components/log-sheet/LogSheetSet'
 import RouteMap from '../components/trip-map/RouteMap'
 import RouteInstructions from '../components/trip-map/RouteInstructions'
+import TripSchedule from '../components/trip-schedule/TripSchedule'
 import TripSummaryCard from '../components/trip-summary/TripSummaryCard'
 import { useTripPlan } from '../hooks/useTripPlan'
 
 export default function TripResultPage() {
   const { id } = useParams()
   const { data: trip, isPending, isError, error, refetch } = useTripPlan(id)
-  const [highlightedStep, setHighlightedStep] = useState(null)
+  const [highlightedPoint, setHighlightedPoint] = useState(null)
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
@@ -58,7 +59,18 @@ export default function TripResultPage() {
               stops={trip.stops}
               segments={trip.segments}
               timezone={trip.timezone ?? 'UTC'}
-              highlightedStep={highlightedStep}
+              highlightedStep={highlightedPoint}
+            />
+          </Box>
+
+          <Box component="section">
+            <Typography variant="h2" component="h2" sx={{ mb: 2 }}>
+              Trip schedule
+            </Typography>
+            <TripSchedule
+              segments={trip.segments}
+              timezone={trip.timezone ?? 'UTC'}
+              onSegmentHover={setHighlightedPoint}
             />
           </Box>
 
@@ -67,7 +79,7 @@ export default function TripResultPage() {
               <Typography variant="h2" component="h2" sx={{ mb: 2 }}>
                 Route instructions
               </Typography>
-              <RouteInstructions legs={trip.legs} onStepHover={setHighlightedStep} />
+              <RouteInstructions legs={trip.legs} onStepHover={setHighlightedPoint} />
             </Box>
           )}
 

@@ -1,9 +1,9 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
-import { Box, Card, CardContent, Typography } from '@mui/material'
+import { Box, Card, CardContent, Divider, Typography } from '@mui/material'
 import { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { STOP_COLORS, STOP_LABELS } from '../../lib/constants'
-import { formatDurationWords } from '../../lib/time'
+import { calculateTripMetrics, formatDurationWords } from '../../lib/time'
 
 function Stop({ stop }) {
   return (
@@ -51,6 +51,19 @@ Stat.propTypes = {
 }
 
 export default function TripSummaryCard({ trip }) {
+  const metrics = calculateTripMetrics(trip.segments, trip.current_cycle_used)
+  const expectedArrival = metrics.expectedArrival
+    ? new Date(metrics.expectedArrival).toLocaleString('en-US', {
+        timeZone: trip.timezone,
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZoneName: 'short',
+      })
+    : '—'
+
   return (
     <Card>
       <CardContent>
@@ -60,7 +73,7 @@ export default function TripSummaryCard({ trip }) {
             flexWrap: 'wrap',
             gap: { xs: 3, lg: 6 },
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: 'flex-start',
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
@@ -73,15 +86,26 @@ export default function TripSummaryCard({ trip }) {
               </Fragment>
             ))}
           </Box>
+        </Box>
 
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-            <Stat
-              label="Distance"
-              value={`${Math.round(trip.total_distance_miles).toLocaleString('en-US')} mi`}
-            />
-            <Stat label="Route time" value={formatDurationWords(trip.total_duration_hours)} />
-            <Stat label="Cycle used" value={`${trip.current_cycle_used} / 70 h`} />
-          </Box>
+        <Divider sx={{ my: 3 }} />
+
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: 'repeat(2, minmax(0, 1fr))', md: 'repeat(3, minmax(0, 1fr))' },
+            gap: { xs: 2.5, md: 4 },
+          }}
+        >
+          <Stat
+            label="Distance"
+            value={`${Math.round(trip.total_distance_miles).toLocaleString('en-US')} mi`}
+          />
+          <Stat label="Driving time" value={formatDurationWords(trip.total_duration_hours)} />
+          <Stat label="Total trip time" value={formatDurationWords(metrics.totalElapsedHours)} />
+          <Stat label="Expected arrival" value={expectedArrival} />
+          <Stat label="Final cycle used" value={`${metrics.finalCycleUsed.toFixed(2).replace(/\.00$/, '')} / 70 h`} />
+          <Stat label="Cycle remaining" value={`${metrics.cycleRemaining.toFixed(2).replace(/\.00$/, '')} h`} />
         </Box>
       </CardContent>
     </Card>
@@ -96,5 +120,14 @@ TripSummaryCard.propTypes = {
     total_distance_miles: PropTypes.number.isRequired,
     total_duration_hours: PropTypes.number.isRequired,
     current_cycle_used: PropTypes.number.isRequired,
+    timezone: PropTypes.string.isRequired,
+    segments: PropTypes.arrayOf(
+      PropTypes.shape({
+        status: PropTypes.string.isRequired,
+        start: PropTypes.string.isRequired,
+        end: PropTypes.string.isRequired,
+        note: PropTypes.string,
+      }),
+    ).isRequired,
   }).isRequired,
 }

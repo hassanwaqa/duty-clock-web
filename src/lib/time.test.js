@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { DUTY_STATUS } from './constants'
-import { splitSegmentsByDay, sumDrivingMiles, sumHoursByStatus } from './time'
+import { calculateTripMetrics, splitSegmentsByDay, sumDrivingMiles, sumHoursByStatus } from './time'
 
 const TIMEZONE = 'America/Chicago'
 
@@ -101,5 +101,35 @@ describe('splitSegmentsByDay', () => {
     ]
 
     expect(sumDrivingMiles(pieces)).toBe(60)
+  })
+})
+
+describe('calculateTripMetrics', () => {
+  it('includes service and rest time while keeping final cycle hours restart-aware', () => {
+    const segments = [
+      segment({ start: '2026-09-01T08:00:00-05:00', end: '2026-09-01T13:00:00-05:00' }),
+      segment({
+        status: DUTY_STATUS.OFF_DUTY,
+        start: '2026-09-01T13:00:00-05:00',
+        end: '2026-09-02T23:00:00-05:00',
+        note: '34-hour restart',
+        distance_miles: null,
+      }),
+      segment({ start: '2026-09-02T23:00:00-05:00', end: '2026-09-03T01:00:00-05:00' }),
+      segment({
+        status: DUTY_STATUS.ON_DUTY,
+        start: '2026-09-03T01:00:00-05:00',
+        end: '2026-09-03T02:00:00-05:00',
+        note: 'Dropoff',
+        distance_miles: null,
+      }),
+    ]
+
+    expect(calculateTripMetrics(segments, 60)).toEqual({
+      totalElapsedHours: 42,
+      expectedArrival: '2026-09-03T01:00:00-05:00',
+      finalCycleUsed: 3,
+      cycleRemaining: 67,
+    })
   })
 })

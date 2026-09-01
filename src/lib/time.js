@@ -137,6 +137,52 @@ export function formatDurationWords(hours) {
   return remainder ? `${hourPart} ${remainder} min` : hourPart
 }
 
+function segmentDurationHours(segment) {
+  return (new Date(segment.end).getTime() - new Date(segment.start).getTime()) / 3_600_000
+}
+
+function cycleAfterSegment(cycleHours, segment, durationHours) {
+  let nextCycle = cycleHours
+  if (segment.status === DUTY_STATUS.DRIVING || segment.status === DUTY_STATUS.ON_DUTY) {
+    nextCycle += durationHours
+  }
+  return segment.note === CYCLE_RESTART_NOTE ? 0 : nextCycle
+}
+
+export function calculateTripMetrics(segments = [], currentCycleUsed = 0) {
+  const reported = [...segments]
+    .filter((segment) => {
+      const duration = segmentDurationHours(segment)
+      return Number.isFinite(duration) && duration > 0
+    })
+    .sort((a, b) => new Date(a.start) - new Date(b.start))
+
+  const startingCycle = Number.isFinite(Number(currentCycleUsed)) ? Number(currentCycleUsed) : 0
+  let finalCycleUsed = startingCycle
+
+  for (const segment of reported) {
+    finalCycleUsed = cycleAfterSegment(
+      finalCycleUsed,
+      segment,
+      segmentDurationHours(segment),
+    )
+  }
+
+  const first = reported[0]
+  const last = reported.at(-1)
+  const dropoff = reported.findLast((segment) => segment.note === 'Dropoff')
+  const totalElapsedHours = first && last
+    ? (new Date(last.end).getTime() - new Date(first.start).getTime()) / 3_600_000
+    : 0
+
+  return {
+    totalElapsedHours,
+    expectedArrival: dropoff?.start ?? last?.end ?? null,
+    finalCycleUsed,
+    cycleRemaining: Math.max(0, 70 - finalCycleUsed),
+  }
+}
+
 function impliedOffDuty(key, startHour, endHour, timezone) {
   return {
     status: DUTY_STATUS.OFF_DUTY,
@@ -272,7 +318,11 @@ export function addCycleRecaps(days, currentCycleUsed) {
       if (segment.implied) continue
 
       if (segment.status === DUTY_STATUS.DRIVING || segment.status === DUTY_STATUS.ON_DUTY) {
-        cycleHours += segment.endHour - segment.startHour
+        cycleHours = cycleAfterSegment(
+          cycleHours,
+          segment,
+          segment.endHour - segment.startHour,
+        )
       }
 
       const completesRestart =
