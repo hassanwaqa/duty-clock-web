@@ -114,11 +114,21 @@ describe('trip request behaviour', () => {
     expect(net.calls).toHaveLength(1)
   })
 
-  it('does not retry a 400 for an invalid trip id', async () => {
-    const net = stubNetwork({ status: 400, body: { detail: 'Invalid trip id.' } })
+  it('rejects a malformed trip id without sending a request', async () => {
+    const net = stubNetwork({ body: TRIP })
 
     mount(makeClient(), <TripProbe id="not-an-id" />)
-    await screen.findByText('error: Invalid trip id.')
+    await screen.findByText('error: Invalid trip ID.')
+    await settle()
+
+    expect(net.calls).toHaveLength(0)
+  })
+
+  it('does not expose an HTML error document in the UI', async () => {
+    const net = stubNetwork({ status: 404, body: '<!doctype html><title>Not Found</title>' })
+
+    mount(makeClient(), <TripProbe id="9999" />)
+    await screen.findByText('error: Request failed with status 404')
     await settle()
 
     expect(net.calls).toHaveLength(1)

@@ -34,4 +34,15 @@ describe('getTrip', () => {
 
     expect(get).toHaveBeenCalledWith('/api/trips/7', { signal: controller.signal })
   })
+
+  it('rejects a malformed id before calling axios', async () => {
+    const get = vi.spyOn(apiClient, 'get')
+
+    await expect(getTrip('not-an-id')).rejects.toMatchObject({
+      message: 'Invalid trip ID.',
+      response: { status: 400 },
+    })
+
+    expect(get).not.toHaveBeenCalled()
+  })
 })

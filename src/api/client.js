@@ -10,7 +10,7 @@ export const apiClient = axios.create({
 // error.message instead of re-guessing the shape.
 function readApiMessage(data) {
   if (!data) return null
-  if (typeof data === 'string') return data
+  if (typeof data === 'string') return /^\s*</.test(data) ? null : data
   if (data.detail) return data.detail
   if (data.error) return data.error
   if (data.message) return data.message

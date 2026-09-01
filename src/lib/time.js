@@ -1,4 +1,4 @@
-import { DUTY_STATUS, HOURS_PER_SHEET, ROW_ORDER } from './constants'
+import { CYCLE_RESTART_NOTE, DUTY_STATUS, HOURS_PER_SHEET, ROW_ORDER } from './constants'
 
 const MS_PER_SECOND = 1_000
 
@@ -199,6 +199,11 @@ export function splitSegmentsByDay(segments = [], timezone = 'UTC') {
         : 0
       const piece = {
         ...segment,
+        // A multi-day segment is clipped into one piece per log sheet. Keep
+        // its true boundaries so cycle recaps can tell which piece actually
+        // completes a 34-hour restart.
+        sourceStart: segment.start,
+        sourceEnd: segment.end,
         start: pieceStart.toISOString(),
         end: pieceEnd.toISOString(),
         startHour,
@@ -256,17 +261,28 @@ export function describeDay(daySegments) {
 }
 
 export function addCycleRecaps(days, currentCycleUsed) {
-  let tripOnDutyHours = 0
-  const startingCycle = Number.isFinite(Number(currentCycleUsed)) ? Number(currentCycleUsed) : 0
+  let cycleHours = Number.isFinite(Number(currentCycleUsed)) ? Number(currentCycleUsed) : 0
 
   return days.map((day) => {
-    tripOnDutyHours += day.totals[DUTY_STATUS.DRIVING] + day.totals[DUTY_STATUS.ON_DUTY]
-    const eightDayTotal = startingCycle + tripOnDutyHours
+    for (const segment of day.segments) {
+      if (segment.implied) continue
+
+      if (segment.status === DUTY_STATUS.DRIVING || segment.status === DUTY_STATUS.ON_DUTY) {
+        cycleHours += segment.endHour - segment.startHour
+      }
+
+      const completesRestart =
+        segment.note === CYCLE_RESTART_NOTE &&
+        (!segment.sourceEnd || new Date(segment.end).getTime() >= new Date(segment.sourceEnd).getTime())
+
+      if (completesRestart) cycleHours = 0
+    }
+
     return {
       ...day,
       recap: {
-        eightDayTotal,
-        hoursAvailableTomorrow: Math.max(0, 70 - eightDayTotal),
+        eightDayTotal: cycleHours,
+        hoursAvailableTomorrow: Math.max(0, 70 - cycleHours),
       },
     }
   })

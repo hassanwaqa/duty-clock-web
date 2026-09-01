@@ -55,6 +55,8 @@ export const MAP_MARKERS = {
   primaryZIndexOffset: 1000,
 }
 
+export const CYCLE_RESTART_NOTE = '34-hour restart'
+
 export const OPTIONAL_LOG_FIELDS = [
   { key: 'driver_name', label: 'Driver name' },
   { key: 'carrier_name', label: 'Carrier' },
