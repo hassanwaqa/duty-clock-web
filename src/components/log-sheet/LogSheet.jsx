@@ -8,7 +8,7 @@ import StatusTotals from './StatusTotals'
 
 export default function LogSheet({ day, trip }) {
   return (
-    <Card>
+    <Card className="log-sheet-card">
       <CardContent>
         <Stack
           direction={{ xs: 'column', md: 'row' }}

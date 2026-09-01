@@ -11,7 +11,13 @@ export function stubNetwork({ delayMs = 0, status = 200, body = {} } = {}) {
 
   apiClient.defaults.adapter = (config) =>
     new Promise((resolve, reject) => {
-      const call = { url: config.url, method: config.method, aborted: false, settled: false }
+      const call = {
+        url: config.url,
+        method: config.method,
+        params: config.params,
+        aborted: false,
+        settled: false,
+      }
       calls.push(call)
       inFlight += 1
       maxInFlight = Math.max(maxInFlight, inFlight)

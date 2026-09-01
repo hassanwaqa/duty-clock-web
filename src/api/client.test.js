@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { apiClient, shouldRetryRequest } from './client'
+import { searchLocations } from './locations'
 import { getTrip } from './trips'
 
 describe('shouldRetryRequest', () => {
@@ -44,5 +45,22 @@ describe('getTrip', () => {
     })
 
     expect(get).not.toHaveBeenCalled()
+  })
+})
+
+describe('searchLocations', () => {
+  it('sends the query and abort signal without exposing a provider key', async () => {
+    const get = vi.spyOn(apiClient, 'get').mockResolvedValue({
+      data: { results: ['Chicago, IL, USA'] },
+    })
+    const controller = new AbortController()
+
+    await expect(searchLocations('Chic', controller.signal)).resolves.toEqual([
+      'Chicago, IL, USA',
+    ])
+    expect(get).toHaveBeenCalledWith('/api/trips/locations', {
+      params: { q: 'Chic' },
+      signal: controller.signal,
+    })
   })
 })

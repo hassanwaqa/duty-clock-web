@@ -43,6 +43,36 @@ export const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: { WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale' },
+        '.print-only': { display: 'none' },
+
+        '@page': { size: 'landscape', margin: '6mm' },
+        '@media print': {
+          body: {
+            background: colors.surface,
+            WebkitPrintColorAdjust: 'exact',
+            printColorAdjust: 'exact',
+          },
+          '.no-print, .screen-only': { display: 'none !important' },
+          '.print-only': { display: 'block !important' },
+          '.MuiContainer-root': {
+            width: '100% !important',
+            maxWidth: 'none !important',
+            padding: '0 !important',
+          },
+          '.print-log-sheet': {
+            breakAfter: 'page',
+            pageBreakAfter: 'always',
+          },
+          '.print-log-sheet:last-child': {
+            breakAfter: 'auto',
+            pageBreakAfter: 'auto',
+          },
+          '.log-sheet-card': {
+            border: 'none !important',
+            borderRadius: '0 !important',
+          },
+          '.log-sheet-card .MuiCardContent-root': { padding: '0 !important' },
+        },
 
         // Leaflet ships its own chrome; restyling it here keeps the map inside
         // the same design system as everything drawn with MUI.

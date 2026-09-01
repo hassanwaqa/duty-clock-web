@@ -21,6 +21,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePlanTrip } from '../../hooks/usePlanTrip'
 import { OPTIONAL_LOG_FIELDS } from '../../lib/constants'
+import LocationAutocomplete from './LocationAutocomplete'
 
 const CYCLE_LIMIT = 70
 
@@ -88,35 +89,32 @@ export default function TripForm() {
             Route
           </Typography>
           <Stack spacing={2} sx={{ mt: 1.75 }}>
-            <TextField
+            <LocationAutocomplete
               label="Current location"
               placeholder="Chicago, IL"
               value={currentLocation}
-              onChange={(event) => setCurrentLocation(event.target.value)}
+              onChange={setCurrentLocation}
               error={Boolean(fieldErrors.currentLocation)}
               helperText={fieldErrors.currentLocation}
-              slotProps={{ input: adornment(MyLocationRoundedIcon) }}
-              fullWidth
+              icon={MyLocationRoundedIcon}
             />
-            <TextField
+            <LocationAutocomplete
               label="Pickup location"
               placeholder="Des Moines, IA"
               value={pickupLocation}
-              onChange={(event) => setPickupLocation(event.target.value)}
+              onChange={setPickupLocation}
               error={Boolean(fieldErrors.pickupLocation)}
               helperText={fieldErrors.pickupLocation}
-              slotProps={{ input: adornment(PlaceRoundedIcon) }}
-              fullWidth
+              icon={PlaceRoundedIcon}
             />
-            <TextField
+            <LocationAutocomplete
               label="Dropoff location"
               placeholder="Salt Lake City, UT"
               value={dropoffLocation}
-              onChange={(event) => setDropoffLocation(event.target.value)}
+              onChange={setDropoffLocation}
               error={Boolean(fieldErrors.dropoffLocation)}
               helperText={fieldErrors.dropoffLocation}
-              slotProps={{ input: adornment(FlagRoundedIcon) }}
-              fullWidth
+              icon={FlagRoundedIcon}
             />
           </Stack>
         </Box>

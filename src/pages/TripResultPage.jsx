@@ -20,6 +20,7 @@ export default function TripResultPage() {
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
       <Stack
+        className="no-print"
         direction={{ xs: 'column', sm: 'row' }}
         spacing={2}
         sx={{ mb: 4, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'flex-end' } }}
@@ -48,9 +49,11 @@ export default function TripResultPage() {
 
       {trip && (
         <Stack spacing={5}>
-          <TripSummaryCard trip={trip} />
+          <Box className="no-print">
+            <TripSummaryCard trip={trip} />
+          </Box>
 
-          <Box component="section">
+          <Box component="section" className="no-print">
             <Typography variant="h2" component="h2" sx={{ mb: 2 }}>
               Route
             </Typography>
@@ -63,7 +66,7 @@ export default function TripResultPage() {
             />
           </Box>
 
-          <Box component="section">
+          <Box component="section" className="no-print">
             <Typography variant="h2" component="h2" sx={{ mb: 2 }}>
               Trip schedule
             </Typography>
@@ -75,7 +78,7 @@ export default function TripResultPage() {
           </Box>
 
           {trip.legs?.length > 0 && (
-            <Box component="section">
+            <Box component="section" className="no-print">
               <Typography variant="h2" component="h2" sx={{ mb: 2 }}>
                 Route instructions
               </Typography>
