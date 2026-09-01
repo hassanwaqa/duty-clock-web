@@ -15,9 +15,7 @@ export default function LocationAutocomplete({
   const [selectedValue, setSelectedValue] = useState('')
   const suggestionInput = selectedValue === value ? '' : value
   const { data: options = [], isFetching, isError } = useLocationSuggestions(suggestionInput)
-  const guidance = isError
-    ? 'Suggestions unavailable — enter a location manually.'
-    : 'Start typing for suggestions · free text is accepted.'
+  const guidance = isError ? 'Suggestions unavailable — enter a location manually.' : undefined
 
   return (
     <Autocomplete
