@@ -127,14 +127,9 @@ export default function TripSchedule({ segments, timezone, legs, stops, onSegmen
   return (
     <Card>
       <CardContent>
-        <Stack spacing={0.5} sx={{ mb: 2.5 }}>
-          <Typography variant="h3" component="h3">
-            Scheduled activity
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Driving, required rest, fuel and service events in chronological order.
-          </Typography>
-        </Stack>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2.5 }}>
+          Driving, required rest, fuel and service events in chronological order.
+        </Typography>
 
         <Stack spacing={3}>
           {groups.map((group, groupIndex) => (

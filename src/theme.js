@@ -1,55 +1,76 @@
 import { createTheme } from '@mui/material/styles'
-import { colors, fonts, radius } from './lib/designTokens'
+import { colors, fonts, radius, tickRule } from './lib/designTokens'
 
 const monoFigures = {
   fontFamily: fonts.mono,
-  fontSize: 13,
-  fontWeight: 500,
-  letterSpacing: '-0.01em',
+  fontSize: 12.5,
+  fontWeight: 450,
+  letterSpacing: '0',
   fontVariantNumeric: 'tabular-nums',
 }
 
+// Micro-labels are set in condensed caps, the way headings are stamped on real
+// duty paperwork — it reads as typeset rather than as a UI kit default.
+const stampLabel = {
+  fontFamily: fonts.condensed,
+  fontSize: 11,
+  fontWeight: 600,
+  letterSpacing: '0.14em',
+  textTransform: 'uppercase',
+  lineHeight: 1.5,
+}
+
 const overlaySurface = {
-  border: `1px solid ${colors.line}`,
+  border: `1px solid ${colors.ruleStrong}`,
   borderRadius: radius,
-  boxShadow: '0 12px 32px rgba(20, 28, 30, 0.14)',
+  boxShadow: '0 10px 30px rgba(26, 25, 23, 0.16)',
 }
 
 export const theme = createTheme({
   palette: {
-    background: { default: colors.canvas, paper: colors.surface },
-    text: { primary: colors.ink, secondary: colors.inkMuted },
-    divider: colors.line,
+    background: { default: colors.paper, paper: colors.surface },
+    text: { primary: colors.ink, secondary: colors.inkMuted, disabled: colors.inkFaint },
+    divider: colors.rule,
     primary: {
-      main: colors.teal,
-      dark: colors.tealDark,
-      light: colors.tealSoft,
+      main: colors.ink,
+      dark: '#000000',
+      light: colors.inkWashStrong,
       contrastText: colors.surface,
     },
-    error: { main: colors.clay, light: colors.claySoft, dark: colors.clayDark },
-    action: { hover: colors.tealWash, selected: colors.tealWashStrong },
+    secondary: { main: colors.navy, light: colors.navySoft, contrastText: colors.surface },
+    error: { main: colors.rust, light: colors.rustSoft, dark: colors.rustDark },
+    action: { hover: colors.inkWash, selected: colors.inkWashStrong },
   },
 
   shape: { borderRadius: radius },
 
   typography: {
     fontFamily: fonts.sans,
-    h1: { fontSize: 30, fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.2 },
-    h2: { fontSize: 19, fontWeight: 600, letterSpacing: '-0.015em', lineHeight: 1.3 },
-    h3: { fontSize: 17, fontWeight: 600, letterSpacing: '-0.01em' },
-    body1: { fontSize: 15, lineHeight: 1.55 },
-    body2: { fontSize: 14, lineHeight: 1.5 },
-    caption: { fontSize: 12.5, lineHeight: 1.4 },
-    overline: { fontSize: 11, fontWeight: 600, letterSpacing: '0.09em', lineHeight: 1.6 },
-    button: { fontSize: 15, fontWeight: 600, textTransform: 'none', letterSpacing: 0 },
+    h1: { fontFamily: fonts.condensed, fontSize: 34, fontWeight: 600, letterSpacing: '-0.01em', lineHeight: 1.1 },
+    h2: { fontFamily: fonts.condensed, fontSize: 15, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', lineHeight: 1.4 },
+    h3: { fontSize: 16, fontWeight: 600, letterSpacing: '-0.005em' },
+    body1: { fontSize: 14.5, lineHeight: 1.55 },
+    body2: { fontSize: 13.5, lineHeight: 1.5 },
+    caption: { fontSize: 12, lineHeight: 1.45, color: colors.inkMuted },
+    overline: stampLabel,
+    button: { fontFamily: fonts.condensed, fontSize: 13, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' },
     mono: monoFigures,
-    monoLarge: { ...monoFigures, fontSize: 19, fontWeight: 600 },
+    monoLarge: { ...monoFigures, fontSize: 18, fontWeight: 500, letterSpacing: '-0.02em' },
+    stamp: stampLabel,
   },
 
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: { WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale' },
+
+        // The log grid's quarter-hour ticks, reused as the app's divider motif.
+        '.tick-rule': {
+          height: 5,
+          backgroundImage: tickRule(),
+          backgroundRepeat: 'repeat-x',
+          backgroundPosition: 'bottom',
+        },
         // MUI component classes are injected after CssBaseline, so a plain
         // `display: none` here loses to `.MuiStack-root { display: flex }`.
         '.print-only': { display: 'none !important' },
@@ -85,15 +106,15 @@ export const theme = createTheme({
 
         // Leaflet ships its own chrome; restyling it here keeps the map inside
         // the same design system as everything drawn with MUI.
-        '.leaflet-container': { fontFamily: fonts.sans, background: colors.canvas },
+        '.leaflet-container': { fontFamily: fonts.sans, background: colors.paper },
         '.leaflet-popup-content-wrapper': {
           borderRadius: radius,
-          border: `1px solid ${colors.line}`,
+          border: `1px solid ${colors.rule}`,
           boxShadow: '0 8px 28px rgba(20, 28, 30, 0.14)',
           padding: 0,
         },
         '.leaflet-popup-content': { margin: 0, padding: '14px 16px' },
-        '.leaflet-popup-tip': { border: `1px solid ${colors.line}`, boxShadow: 'none' },
+        '.leaflet-popup-tip': { border: `1px solid ${colors.rule}`, boxShadow: 'none' },
         '.leaflet-popup-close-button': {
           color: `${colors.inkMuted} !important`,
           top: '8px !important',
@@ -103,8 +124,8 @@ export const theme = createTheme({
         '.leaflet-control-zoom a': {
           color: colors.ink,
           background: colors.surface,
-          border: `1px solid ${colors.line}`,
-          '&:hover': { background: colors.tealSoft, color: colors.teal },
+          border: `1px solid ${colors.rule}`,
+          '&:hover': { background: colors.inkWashStrong, color: colors.ink },
         },
         '.leaflet-control-attribution': {
           fontFamily: fonts.sans,
@@ -125,8 +146,8 @@ export const theme = createTheme({
         listbox: { padding: 6 },
         option: {
           borderRadius: radius - 4,
-          '&.Mui-focused': { backgroundColor: colors.tealWash },
-          '&[aria-selected="true"]': { backgroundColor: colors.tealWashStrong },
+          '&.Mui-focused': { backgroundColor: colors.inkWash },
+          '&[aria-selected="true"]': { backgroundColor: colors.inkWashStrong },
         },
         noOptions: { fontSize: 14, color: colors.inkMuted },
         loading: { fontSize: 14, color: colors.inkMuted },
@@ -138,38 +159,88 @@ export const theme = createTheme({
     MuiCard: {
       defaultProps: { variant: 'outlined' },
       styleOverrides: {
-        root: { borderColor: colors.line, borderRadius: radius },
+        root: { borderColor: colors.rule, borderRadius: radius },
       },
     },
 
     MuiCardContent: {
       styleOverrides: {
-        root: { padding: 24, '&:last-child': { paddingBottom: 24 } },
+        root: { padding: 22, '&:last-child': { paddingBottom: 22 } },
+      },
+    },
+
+    MuiTabs: {
+      styleOverrides: {
+        root: { minHeight: 40 },
+        indicator: { height: 2, backgroundColor: colors.navy },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          minHeight: 40,
+          padding: '8px 14px',
+          fontFamily: fonts.condensed,
+          fontSize: 12,
+          fontWeight: 600,
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          color: colors.inkMuted,
+          '&.Mui-selected': { color: colors.ink },
+        },
       },
     },
 
     MuiButton: {
       defaultProps: { disableElevation: true },
       styleOverrides: {
-        root: { borderRadius: radius - 2, paddingInline: 20 },
-        sizeLarge: { paddingBlock: 12, fontSize: 15 },
-        containedPrimary: { '&:hover': { backgroundColor: colors.tealDark } },
-        outlined: { borderColor: colors.line, '&:hover': { borderColor: colors.teal, background: colors.tealSoft } },
+        root: { borderRadius: radius, paddingInline: 18 },
+        sizeLarge: { paddingBlock: 13, fontSize: 13 },
+        containedPrimary: { '&:hover': { backgroundColor: '#000000' } },
+        outlined: {
+          borderColor: colors.ruleStrong,
+          color: colors.ink,
+          '&:hover': { borderColor: colors.ink, background: colors.inkWash },
+        },
       },
     },
 
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          borderRadius: radius - 2,
+          borderRadius: radius,
           background: colors.surface,
-          '& fieldset': { borderColor: colors.line },
-          '&:hover fieldset': { borderColor: colors.lineStrong },
-          '&.Mui-focused .MuiSvgIcon-root': { color: colors.teal },
+          '& fieldset': { borderColor: colors.rule },
+          '&:hover fieldset': { borderColor: colors.ruleStrong },
+          '&.Mui-focused .MuiSvgIcon-root': { color: colors.ink },
         },
-        input: { fontSize: 15 },
+        input: { fontSize: 14.5 },
+        notchedOutline: {
+          top: 0,
+          '& legend': { display: 'none' },
+        },
       },
     },
+
+    // Lift labels out of Material's notched outline and stamp them above the
+    // field, the way a paper form prints its field captions. Done in the theme
+    // so no call site has to know about it and `label` stays the accessible name.
+    MuiInputLabel: {
+      defaultProps: { shrink: true },
+      styleOverrides: {
+        outlined: {
+          ...stampLabel,
+          position: 'static',
+          transform: 'none',
+          maxWidth: '100%',
+          color: colors.inkMuted,
+          marginBottom: 5,
+          '&.Mui-focused': { color: colors.ink },
+          '&.Mui-error': { color: colors.rust },
+        },
+      },
+    },
+    MuiFormControl: { styleOverrides: { root: { display: 'flex' } } },
 
     MuiInputAdornment: { styleOverrides: { root: { color: colors.inkMuted } } },
 
@@ -180,9 +251,9 @@ export const theme = createTheme({
         root: { borderRadius: radius, border: '1px solid', alignItems: 'flex-start' },
         standardError: {
           color: colors.ink,
-          backgroundColor: colors.claySoft,
+          backgroundColor: colors.rustSoft,
           borderColor: 'rgba(163, 74, 60, 0.28)',
-          '& .MuiAlert-icon': { color: colors.clay },
+          '& .MuiAlert-icon': { color: colors.rust },
         },
       },
     },
@@ -209,6 +280,6 @@ export const theme = createTheme({
       defaultProps: { variantMapping: { mono: 'span', monoLarge: 'span' } },
     },
 
-    MuiDivider: { styleOverrides: { root: { borderColor: colors.line } } },
+    MuiDivider: { styleOverrides: { root: { borderColor: colors.rule } } },
   },
 })

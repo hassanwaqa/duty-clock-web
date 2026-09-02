@@ -1,10 +1,11 @@
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
-import { Box, Button, Container, Stack, Typography } from '@mui/material'
+import { Box, Button, Container, Stack } from '@mui/material'
 import { useState } from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import BrandMark from '../components/common/BrandMark'
+import AppMasthead from '../components/common/AppMasthead'
 import ErrorState from '../components/common/ErrorState'
 import LoadingState from '../components/common/LoadingState'
+import SectionRule from '../components/common/SectionRule'
 import LogSheetSet from '../components/log-sheet/LogSheetSet'
 import RouteMap from '../components/trip-map/RouteMap'
 import RouteInstructions from '../components/trip-map/RouteInstructions'
@@ -17,85 +18,78 @@ export default function TripResultPage() {
   const { data: trip, isPending, isError, error, refetch } = useTripPlan(id)
   const [highlightedPoint, setHighlightedPoint] = useState(null)
 
+  const route = trip
+    ? `${trip.current_location} → ${trip.dropoff_location}`
+    : `Trip ${id}`
+
   return (
-    <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
-      <Stack
-        className="no-print"
-        direction={{ xs: 'column', sm: 'row' }}
-        spacing={2}
-        sx={{ mb: 4, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'flex-end' } }}
-      >
-        <Stack spacing={1.5}>
-          <BrandMark />
-          <Typography variant="h1" component="h1">
-            Trip plan
-          </Typography>
-        </Stack>
-        <Button
-          component={RouterLink}
-          to="/"
-          variant="outlined"
-          startIcon={<AddRoundedIcon fontSize="small" />}
-        >
-          Plan another trip
-        </Button>
-      </Stack>
+    <>
+      <AppMasthead
+        stamp={route}
+        actions={
+          <Button
+            component={RouterLink}
+            to="/"
+            size="small"
+            variant="outlined"
+            startIcon={<AddRoundedIcon fontSize="small" />}
+          >
+            New trip
+          </Button>
+        }
+      />
 
-      {isPending && <LoadingState />}
+      <Container maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
+        {isPending && <LoadingState />}
 
-      {isError && (
-        <ErrorState title="Could not load this trip" message={error.message} onRetry={refetch} />
-      )}
+        {isError && (
+          <ErrorState title="Could not load this trip" message={error.message} onRetry={refetch} />
+        )}
 
-      {trip && (
-        <Stack spacing={5}>
-          <Box className="no-print">
-            <TripSummaryCard trip={trip} />
-          </Box>
-
-          <Box component="section" className="no-print">
-            <Typography variant="h2" component="h2" sx={{ mb: 2 }}>
-              Route
-            </Typography>
-            <RouteMap
-              routeGeometry={trip.route_geometry}
-              stops={trip.stops}
-              segments={trip.segments}
-              timezone={trip.timezone ?? 'UTC'}
-              highlightedStep={highlightedPoint}
-            />
-          </Box>
-
-          <Box component="section" className="no-print">
-            <Typography variant="h2" component="h2" sx={{ mb: 2 }}>
-              Trip schedule
-            </Typography>
-            <TripSchedule
-              segments={trip.segments}
-              timezone={trip.timezone ?? 'UTC'}
-              legs={trip.legs}
-              stops={trip.stops}
-              onSegmentHover={setHighlightedPoint}
-            />
-          </Box>
-
-          {trip.legs?.length > 0 && (
-            <Box component="section" className="no-print">
-              <Typography variant="h2" component="h2" sx={{ mb: 2 }}>
-                Route instructions
-              </Typography>
-              <RouteInstructions legs={trip.legs} onStepHover={setHighlightedPoint} />
+        {trip && (
+          <Stack spacing={{ xs: 4, md: 5 }}>
+            <Box className="no-print">
+              <TripSummaryCard trip={trip} />
             </Box>
-          )}
 
-          <Box component="section">
-            <Typography variant="h2" component="h2" sx={{ mb: 2 }}>
-              Daily log sheets
-            </Typography>
-            <LogSheetSet trip={trip} />
-          </Box>
-        </Stack>
-      )}
-    </Container>
+            <Box component="section" className="no-print">
+              <SectionRule>Route</SectionRule>
+              <RouteMap
+                routeGeometry={trip.route_geometry}
+                stops={trip.stops}
+                segments={trip.segments}
+                timezone={trip.timezone ?? 'UTC'}
+                highlightedStep={highlightedPoint}
+              />
+            </Box>
+
+            <Box component="section" className="no-print">
+              <SectionRule>Trip schedule</SectionRule>
+              <TripSchedule
+                segments={trip.segments}
+                timezone={trip.timezone ?? 'UTC'}
+                legs={trip.legs}
+                stops={trip.stops}
+                onSegmentHover={setHighlightedPoint}
+              />
+            </Box>
+
+            {trip.legs?.length > 0 && (
+              <Box component="section" className="no-print">
+                <SectionRule>Route instructions</SectionRule>
+                <RouteInstructions legs={trip.legs} onStepHover={setHighlightedPoint} />
+              </Box>
+            )}
+
+            <Box component="section">
+              <Box className="no-print">
+                <SectionRule>Daily log sheets</SectionRule>
+              </Box>
+              <LogSheetSet trip={trip} />
+            </Box>
+          </Stack>
+        )}
+      </Container>
+    </>
   )
 }

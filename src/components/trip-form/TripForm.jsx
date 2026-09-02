@@ -86,10 +86,13 @@ export default function TripForm() {
     <Box component="form" onSubmit={handleSubmit} noValidate>
       <Stack spacing={3}>
         <Box>
-          <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+          <Typography
+            variant="overline"
+            sx={{ color: 'text.primary', display: 'block', pb: 0.75, borderBottom: '1px solid', borderColor: 'divider' }}
+          >
             Route
           </Typography>
-          <Stack spacing={2} sx={{ mt: 1.75 }}>
+          <Stack spacing={2.25} sx={{ mt: 2 }}>
             <LocationAutocomplete
               label="Current location"
               placeholder="Chicago, IL"
@@ -123,8 +126,17 @@ export default function TripForm() {
         <Divider />
 
         <Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-            <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.75,
+              pb: 0.75,
+              borderBottom: '1px solid',
+              borderColor: 'divider',
+            }}
+          >
+            <Typography variant="overline" sx={{ color: 'text.primary' }}>
               Hours of service
             </Typography>
             <InfoHint text={HOS_HINTS.cycle} label="About the 70-hour / 8-day cycle" />
@@ -144,7 +156,7 @@ export default function TripForm() {
               htmlInput: { min: 0, max: CYCLE_LIMIT, step: 0.25 },
             }}
             fullWidth
-            sx={{ mt: 1.75 }}
+            sx={{ mt: 2 }}
           />
         </Box>
 

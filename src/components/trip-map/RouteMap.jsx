@@ -1,5 +1,4 @@
 import { Box, Stack, Typography } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
 import L from 'leaflet'
 import PropTypes from 'prop-types'
 import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer } from 'react-leaflet'
@@ -46,7 +45,6 @@ function stopDuty(stop, segments) {
 }
 
 export default function RouteMap({ routeGeometry, stops, segments, timezone, highlightedStep }) {
-  const theme = useTheme()
   const route = (routeGeometry?.coordinates ?? []).map(([lng, lat]) => [lat, lng])
   const stopPositions = stops.map((stop) => [stop.lat, stop.lng])
   const hosEvents = segments.filter(
@@ -79,7 +77,7 @@ export default function RouteMap({ routeGeometry, stops, segments, timezone, hig
           />
           <Polyline
             positions={route}
-            pathOptions={{ color: theme.palette.primary.main, weight: 4, opacity: 0.9 }}
+            pathOptions={{ color: STATUS_COLORS[DUTY_STATUS.DRIVING], weight: 4, opacity: 0.95 }}
           />
           {hosEvents.map((segment, index) => (
             <CircleMarker
@@ -165,7 +163,7 @@ export default function RouteMap({ routeGeometry, stops, segments, timezone, hig
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 1.5, sm: 2.5 }, alignItems: 'center' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-          <Box sx={{ width: 9, height: 13, borderRadius: '7px 7px 7px 1px', bgcolor: 'primary.main', transform: 'rotate(-45deg)' }} />
+          <Box sx={{ width: 9, height: 13, borderRadius: '7px 7px 7px 1px', bgcolor: STATUS_COLORS[DUTY_STATUS.DRIVING], transform: 'rotate(-45deg)' }} />
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>Route stops</Typography>
         </Box>
         {ROW_ORDER.filter((status) => status !== DUTY_STATUS.DRIVING).map((status) => (

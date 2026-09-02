@@ -43,14 +43,16 @@ describe('TripSummaryCard', () => {
       />,
     )
 
-    expect(screen.getByText('Driving time')).toBeTruthy()
+    expect(screen.getByText('Driving')).toBeTruthy()
     expect(screen.getByText('36 hours 48 min')).toBeTruthy()
-    expect(screen.getByText('Total trip time')).toBeTruthy()
+    expect(screen.getByText('Total elapsed')).toBeTruthy()
     expect(screen.getByText('13 hours')).toBeTruthy()
-    expect(screen.getByText('Expected arrival')).toBeTruthy()
-    expect(screen.getByText(/Tue, Sep 1.*8:00 PM CDT/)).toBeTruthy()
-    expect(screen.getByText('Final cycle used')).toBeTruthy()
+    // Arrival keeps its trip-local zone, split across figure and sub-line.
+    expect(screen.getByText('Arrival')).toBeTruthy()
+    expect(screen.getByText('20:00')).toBeTruthy()
+    expect(screen.getByText(/Tue, Sep 1 · CDT/)).toBeTruthy()
+    expect(screen.getByText('Cycle used')).toBeTruthy()
     expect(screen.getByText('13 / 70 h')).toBeTruthy()
-    expect(screen.getByText('57 h')).toBeTruthy()
+    expect(screen.getByText('57 h remaining')).toBeTruthy()
   })
 })

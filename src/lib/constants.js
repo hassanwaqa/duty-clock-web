@@ -32,9 +32,9 @@ export const STATUS_SHORT_LABELS = {
 // map — a status must look the same everywhere it appears.
 export const STATUS_COLORS = {
   [DUTY_STATUS.OFF_DUTY]: colors.slate,
-  [DUTY_STATUS.SLEEPER_BERTH]: colors.indigo,
-  [DUTY_STATUS.DRIVING]: colors.teal,
-  [DUTY_STATUS.ON_DUTY]: colors.amber,
+  [DUTY_STATUS.SLEEPER_BERTH]: colors.plum,
+  [DUTY_STATUS.DRIVING]: colors.navy,
+  [DUTY_STATUS.ON_DUTY]: colors.ochre,
 }
 
 export const STOP_LABELS = {
@@ -45,8 +45,8 @@ export const STOP_LABELS = {
 
 export const STOP_COLORS = {
   current: colors.slate,
-  pickup: colors.amber,
-  dropoff: colors.teal,
+  pickup: colors.ochre,
+  dropoff: colors.navy,
 }
 
 export const MAP_MARKERS = {
