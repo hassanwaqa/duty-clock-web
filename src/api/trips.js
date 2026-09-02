@@ -1,7 +1,9 @@
 import { apiClient } from './client'
 
-export async function planTrip(payload) {
-  const { data } = await apiClient.post('/api/trips/plan', payload)
+export async function planTrip({ payload, idempotencyKey }) {
+  const { data } = await apiClient.post('/api/trips/plan', payload, {
+    headers: { 'Idempotency-Key': idempotencyKey },
+  })
   return data
 }
 

@@ -32,6 +32,11 @@ Submitting the form `POST`s to `/api/trips/plan` and navigates to `/trips/:id`,
 so every planned trip has a shareable URL. Loading that URL cold re-fetches
 through `GET /api/trips/:id`. There is no trip list or history.
 
+The form generates one `Idempotency-Key` for each distinct normalized payload
+and reuses it when that same submission is attempted again. This lets the API
+return the previously created trip after an uncertain network response without
+repeating ORS work or inserting another database row.
+
 ## How the log sheet is built
 
 `lib/time.js` → `splitSegmentsByDay()` takes the backend's flat, chronological

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { apiClient, shouldRetryRequest } from './client'
 import { resetNetwork, stubNetwork } from '../test/networkStub'
 import { searchLocations } from './locations'
-import { getTrip } from './trips'
+import { getTrip, planTrip } from './trips'
 
 describe('shouldRetryRequest', () => {
   it('does not retry a cancelled request', () => {
@@ -46,6 +46,25 @@ describe('getTrip', () => {
     })
 
     expect(get).not.toHaveBeenCalled()
+  })
+})
+
+describe('planTrip', () => {
+  it('sends a caller-stable idempotency key without changing the payload', async () => {
+    const post = vi.spyOn(apiClient, 'post').mockResolvedValue({ data: { id: 7 } })
+    const payload = {
+      current_location: 'Chicago, IL',
+      pickup_location: 'Denver, CO',
+      dropoff_location: 'Los Angeles, CA',
+      current_cycle_used: 10,
+    }
+
+    await expect(
+      planTrip({ payload, idempotencyKey: 'plan-1234567890abcdef' }),
+    ).resolves.toEqual({ id: 7 })
+    expect(post).toHaveBeenCalledWith('/api/trips/plan', payload, {
+      headers: { 'Idempotency-Key': 'plan-1234567890abcdef' },
+    })
   })
 })
 

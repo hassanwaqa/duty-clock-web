@@ -17,7 +17,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePlanTrip } from '../../hooks/usePlanTrip'
 import { HOS_HINTS, OPTIONAL_LOG_FIELDS } from '../../lib/constants'
@@ -46,6 +46,7 @@ export default function TripForm() {
     Object.fromEntries(OPTIONAL_LOG_FIELDS.map(({ key }) => [key, ''])),
   )
   const [fieldErrors, setFieldErrors] = useState({})
+  const submissionRef = useRef(null)
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -70,13 +71,25 @@ export default function TripForm() {
         .filter(([, value]) => value),
     )
 
+    const payload = {
+      current_location: currentLocation.trim(),
+      pickup_location: pickupLocation.trim(),
+      dropoff_location: dropoffLocation.trim(),
+      current_cycle_used: cycleUsedHours,
+      ...suppliedLogDetails,
+    }
+    const fingerprint = JSON.stringify(payload)
+    if (submissionRef.current?.fingerprint !== fingerprint) {
+      submissionRef.current = {
+        fingerprint,
+        idempotencyKey: crypto.randomUUID(),
+      }
+    }
+
     mutate(
       {
-        current_location: currentLocation.trim(),
-        pickup_location: pickupLocation.trim(),
-        dropoff_location: dropoffLocation.trim(),
-        current_cycle_used: cycleUsedHours,
-        ...suppliedLogDetails,
+        payload,
+        idempotencyKey: submissionRef.current.idempotencyKey,
       },
       { onSuccess: (trip) => navigate(`/trips/${trip.id}`) },
     )
