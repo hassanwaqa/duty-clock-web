@@ -106,6 +106,15 @@ function formatMinutes(minutes) {
 // totals miss the day's total by a minute, which reads as an arithmetic error
 // to anyone adding up the column. Hand the leftover minutes to the rows with
 // the largest dropped fractions so the column always foots.
+export function formatShortDayLabel(key) {
+  return new Date(`${key}T00:00:00Z`).toLocaleDateString('en-US', {
+    timeZone: 'UTC',
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
 export function formatRowTotals(totals) {
   const exact = ROW_ORDER.map((status) => totals[status] * 60)
   const minutes = exact.map(Math.floor)

@@ -3,6 +3,7 @@ import { Box, Button, Stack, Tab, Tabs } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { useDaySheets } from '../../hooks/useDaySheets'
+import { formatShortDayLabel } from '../../lib/time'
 import LogSheet from './LogSheet'
 
 export default function LogSheetSet({ trip }) {
@@ -33,7 +34,7 @@ export default function LogSheetSet({ trip }) {
                 value={day.dayKey}
                 id={`log-tab-${day.dayKey}`}
                 aria-controls={`log-panel-${day.dayKey}`}
-                label={`Day ${index + 1} · ${day.dayKey}`}
+                label={`Day ${index + 1} · ${formatShortDayLabel(day.dayKey)}`}
               />
             ))}
           </Tabs>

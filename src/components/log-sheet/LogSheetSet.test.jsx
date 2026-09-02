@@ -40,7 +40,7 @@ describe('LogSheetSet', () => {
     expect(screen.getAllByRole('tab')).toHaveLength(2)
     expect(within(screen.getByRole('tabpanel')).getByText('Tuesday, September 1, 2026')).toBeTruthy()
 
-    fireEvent.click(screen.getByRole('tab', { name: 'Day 2 · 2026-09-02' }))
+    fireEvent.click(screen.getByRole('tab', { name: 'Day 2 · Wed, Sep 2' }))
     expect(within(screen.getByRole('tabpanel')).getByText('Wednesday, September 2, 2026')).toBeTruthy()
     expect(document.querySelectorAll('.print-log-sheet')).toHaveLength(2)
 

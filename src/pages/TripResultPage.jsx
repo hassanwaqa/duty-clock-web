@@ -73,6 +73,8 @@ export default function TripResultPage() {
             <TripSchedule
               segments={trip.segments}
               timezone={trip.timezone ?? 'UTC'}
+              legs={trip.legs}
+              stops={trip.stops}
               onSegmentHover={setHighlightedPoint}
             />
           </Box>

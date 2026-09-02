@@ -10,6 +10,8 @@ export const colors = {
   tealDark: '#06363F',
   tealSoft: '#E0EDEF',
   tealAccent: '#7FD3D8',
+  tealWash: 'rgba(11, 79, 92, 0.055)',
+  tealWashStrong: 'rgba(11, 79, 92, 0.10)',
 
   slate: '#6B7A7E',
   indigo: '#5B5FA6',

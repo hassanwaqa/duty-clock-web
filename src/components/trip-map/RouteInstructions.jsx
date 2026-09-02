@@ -56,19 +56,26 @@ export default function RouteInstructions({ legs, onStepHover }) {
                 <Box
                   component="li"
                   key={`${stepIndex}-${step.instruction}`}
+                  tabIndex={0}
                   onMouseEnter={() => onStepHover?.(step)}
                   onMouseLeave={() => onStepHover?.(null)}
+                  onFocus={() => onStepHover?.(step)}
+                  onBlur={() => onStepHover?.(null)}
                   sx={{
                     display: 'grid',
                     gridTemplateColumns: '28px minmax(0, 1fr) max-content',
                     gap: 1.5,
                     alignItems: 'baseline',
                     py: 1.25,
+                    // Full-bleed square highlight: a rounded inset block leaves
+                    // the next row's divider cutting across its corners.
+                    px: { xs: 2, sm: 2.5 },
+                    mx: { xs: -2, sm: -2.5 },
+                    outline: 'none',
                     borderTop: stepIndex ? '1px solid' : 0,
                     borderColor: 'divider',
-                    borderRadius: 1,
                     transition: 'background-color 120ms ease',
-                    '&:hover': { bgcolor: 'primary.light' },
+                    '&:hover, &:focus-visible': { bgcolor: 'action.hover' },
                   }}
                 >
                   <Typography variant="mono" sx={{ color: 'text.secondary', textAlign: 'right' }}>

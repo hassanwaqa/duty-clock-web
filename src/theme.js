@@ -9,6 +9,12 @@ const monoFigures = {
   fontVariantNumeric: 'tabular-nums',
 }
 
+const overlaySurface = {
+  border: `1px solid ${colors.line}`,
+  borderRadius: radius,
+  boxShadow: '0 12px 32px rgba(20, 28, 30, 0.14)',
+}
+
 export const theme = createTheme({
   palette: {
     background: { default: colors.canvas, paper: colors.surface },
@@ -21,6 +27,7 @@ export const theme = createTheme({
       contrastText: colors.surface,
     },
     error: { main: colors.clay, light: colors.claySoft, dark: colors.clayDark },
+    action: { hover: colors.tealWash, selected: colors.tealWashStrong },
   },
 
   shape: { borderRadius: radius },
@@ -43,7 +50,9 @@ export const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: { WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale' },
-        '.print-only': { display: 'none' },
+        // MUI component classes are injected after CssBaseline, so a plain
+        // `display: none` here loses to `.MuiStack-root { display: flex }`.
+        '.print-only': { display: 'none !important' },
 
         '@page': { size: 'landscape', margin: '6mm' },
         '@media print': {
@@ -107,6 +116,24 @@ export const theme = createTheme({
     },
 
     MuiPaper: { defaultProps: { elevation: 0 }, styleOverrides: { root: { backgroundImage: 'none' } } },
+
+    // Cards are deliberately flat, but floating surfaces must lift off the page
+    // or a dropdown reads as loose text sitting on top of the form.
+    MuiAutocomplete: {
+      styleOverrides: {
+        paper: { ...overlaySurface, marginTop: 6 },
+        listbox: { padding: 6 },
+        option: {
+          borderRadius: radius - 4,
+          '&.Mui-focused': { backgroundColor: colors.tealWash },
+          '&[aria-selected="true"]': { backgroundColor: colors.tealWashStrong },
+        },
+        noOptions: { fontSize: 14, color: colors.inkMuted },
+        loading: { fontSize: 14, color: colors.inkMuted },
+      },
+    },
+    MuiMenu: { styleOverrides: { paper: overlaySurface } },
+    MuiPopover: { styleOverrides: { paper: overlaySurface } },
 
     MuiCard: {
       defaultProps: { variant: 'outlined' },
