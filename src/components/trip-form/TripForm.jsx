@@ -97,7 +97,7 @@ export default function TripForm() {
 
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
-      <Stack spacing={3}>
+      <Stack spacing={2.5}>
         <Box>
           <Typography
             variant="overline"
@@ -105,7 +105,7 @@ export default function TripForm() {
           >
             Route
           </Typography>
-          <Stack spacing={2.25} sx={{ mt: 2 }}>
+          <Stack spacing={1.75} sx={{ mt: 1.75 }}>
             <LocationAutocomplete
               label="Current location"
               placeholder="Chicago, IL"
@@ -161,15 +161,13 @@ export default function TripForm() {
             value={cycleUsed}
             onChange={(event) => setCycleUsed(event.target.value)}
             error={Boolean(fieldErrors.cycleUsed)}
-            helperText={
-              fieldErrors.cycleUsed ?? `Hours already on duty in the ${CYCLE_LIMIT}-hour / 8-day cycle`
-            }
+            helperText={fieldErrors.cycleUsed}
             slotProps={{
               input: adornment(SpeedRoundedIcon),
               htmlInput: { min: 0, max: CYCLE_LIMIT, step: 0.25 },
             }}
             fullWidth
-            sx={{ mt: 2 }}
+            sx={{ mt: 1.75 }}
           />
         </Box>
 

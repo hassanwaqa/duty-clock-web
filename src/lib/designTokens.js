@@ -46,6 +46,7 @@ export const layout = {
   formMaxWidth: 560,
   mapHeight: 460,
   mastheadHeight: 56,
+  mastheadOffset: 62,
 }
 
 // The quarter-hour tick motif from the log grid, reused as a rule across the UI.
