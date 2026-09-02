@@ -1,4 +1,12 @@
-import { CYCLE_RESTART_NOTE, DUTY_STATUS, HOURS_PER_SHEET, ROW_ORDER } from './constants'
+import {
+  BREAK_NOTE,
+  CYCLE_RESTART_NOTE,
+  DAILY_RESET_NOTE,
+  DUTY_STATUS,
+  FUEL_NOTE,
+  HOURS_PER_SHEET,
+  ROW_ORDER,
+} from './constants'
 
 const MS_PER_SECOND = 1_000
 
@@ -184,11 +192,19 @@ export function calculateTripMetrics(segments = [], currentCycleUsed = 0) {
     ? (new Date(last.end).getTime() - new Date(first.start).getTime()) / 3_600_000
     : 0
 
+  const countNote = (note) => reported.filter((segment) => segment.note === note).length
+
   return {
     totalElapsedHours,
     expectedArrival: dropoff?.start ?? last?.end ?? null,
     finalCycleUsed,
     cycleRemaining: Math.max(0, 70 - finalCycleUsed),
+    counts: {
+      restStops: countNote(DAILY_RESET_NOTE) + countNote(CYCLE_RESTART_NOTE),
+      breaks: countNote(BREAK_NOTE),
+      fuelStops: countNote(FUEL_NOTE),
+      restarts: countNote(CYCLE_RESTART_NOTE),
+    },
   }
 }
 

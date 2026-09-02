@@ -20,7 +20,8 @@ import {
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePlanTrip } from '../../hooks/usePlanTrip'
-import { OPTIONAL_LOG_FIELDS } from '../../lib/constants'
+import { HOS_HINTS, OPTIONAL_LOG_FIELDS } from '../../lib/constants'
+import InfoHint from '../common/InfoHint'
 import LocationAutocomplete from './LocationAutocomplete'
 
 const CYCLE_LIMIT = 70
@@ -122,9 +123,12 @@ export default function TripForm() {
         <Divider />
 
         <Box>
-          <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-            Hours of service
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+            <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+              Hours of service
+            </Typography>
+            <InfoHint text={HOS_HINTS.cycle} label="About the 70-hour / 8-day cycle" />
+          </Box>
           <TextField
             label="Current cycle used"
             type="number"

@@ -56,6 +56,31 @@ export const MAP_MARKERS = {
 }
 
 export const CYCLE_RESTART_NOTE = '34-hour restart'
+export const DAILY_RESET_NOTE = '10-hour reset'
+export const BREAK_NOTE = '30-minute break'
+export const FUEL_NOTE = 'Fuel stop'
+export const PICKUP_NOTE = 'Pickup'
+
+// Leg endpoints come back as point names; a dispatcher reads them as the two
+// halves of the run — empty to the pickup, loaded to the dropoff.
+export const LEG_TITLES = {
+  'current>pickup': 'Deadhead to pickup',
+  'pickup>dropoff': 'Loaded to dropoff',
+}
+
+// Plain-language notes for reviewers who do not work to the federal rules daily.
+export const HOS_HINTS = {
+  cycle:
+    'The 70-hour / 8-day cycle: a driver may not be on duty more than 70 hours across any 8 consecutive days. Driving and on-duty time both count; off-duty and sleeper time do not.',
+  restart:
+    'A 34-hour restart is 34 consecutive off-duty hours. Completing one resets the 70-hour cycle back to zero.',
+  dailyReset:
+    'A 10-hour reset is the off-duty period required before a new driving window: 11 hours of driving within a 14-hour on-duty window.',
+  break:
+    'A 30-minute break is required after 8 cumulative hours of driving.',
+  drivingTime: 'Time actually behind the wheel, excluding rests, breaks, fuel, pickup and dropoff.',
+  totalTripTime: 'Wall-clock time from the first scheduled event to the last, including every rest.',
+}
 
 export const OPTIONAL_LOG_FIELDS = [
   { key: 'driver_name', label: 'Driver name' },

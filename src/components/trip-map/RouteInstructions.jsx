@@ -1,10 +1,13 @@
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded'
 import { Accordion, AccordionDetails, AccordionSummary, Box, Stack, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import { STOP_LABELS } from '../../lib/constants'
+import { LEG_TITLES, STOP_LABELS } from '../../lib/constants'
 import { formatDurationWords } from '../../lib/time'
 
-const legPointLabel = (value) => STOP_LABELS[value] ?? value
+// Same wording as the trip schedule, so both sections name the legs alike.
+const legTitle = (leg) =>
+  LEG_TITLES[`${leg.from}>${leg.to}`] ??
+  `${STOP_LABELS[leg.from] ?? leg.from} → ${STOP_LABELS[leg.to] ?? leg.to}`
 
 function formatMiles(miles) {
   if (!Number.isFinite(miles)) return '—'
@@ -43,7 +46,7 @@ export default function RouteInstructions({ legs, onStepHover }) {
               sx={{ width: '100%', pr: 1, justifyContent: 'space-between', minWidth: 0 }}
             >
               <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                {`${legPointLabel(leg.from)} → ${legPointLabel(leg.to)}`}
+                {`Leg ${legIndex + 1} · ${legTitle(leg)}`}
               </Typography>
               <Typography variant="mono" sx={{ color: 'text.secondary', whiteSpace: 'nowrap' }}>
                 {`${formatMiles(leg.distance_miles)} · ${formatDurationWords(leg.duration_hours)}`}

@@ -48,8 +48,8 @@ describe('RouteInstructions', () => {
   it('renders one section per leg and every instruction returned by the API', () => {
     render(<RouteInstructions legs={LEGS} />)
 
-    expect(screen.getByText('Current location → Pickup')).toBeTruthy()
-    fireEvent.click(screen.getByText('Pickup → Dropoff'))
+    expect(screen.getByText('Leg 1 · Deadhead to pickup')).toBeTruthy()
+    fireEvent.click(screen.getByText('Leg 2 · Loaded to dropoff'))
     expect(screen.getAllByRole('listitem')).toHaveLength(3)
     expect(screen.getByText('Head west on I-80')).toBeTruthy()
     expect(screen.getByText('Merge onto I-35 South')).toBeTruthy()

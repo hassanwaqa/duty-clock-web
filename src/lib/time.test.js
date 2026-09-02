@@ -130,6 +130,7 @@ describe('calculateTripMetrics', () => {
       expectedArrival: '2026-09-03T01:00:00-05:00',
       finalCycleUsed: 3,
       cycleRemaining: 67,
+      counts: { restStops: 1, breaks: 0, fuelStops: 0, restarts: 1 },
     })
   })
 })
