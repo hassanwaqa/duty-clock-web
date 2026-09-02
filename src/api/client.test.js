@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { apiClient, shouldRetryRequest } from './client'
+import { resetNetwork, stubNetwork } from '../test/networkStub'
 import { searchLocations } from './locations'
 import { getTrip } from './trips'
 
@@ -62,5 +63,37 @@ describe('searchLocations', () => {
       params: { q: 'Chic' },
       signal: controller.signal,
     })
+  })
+})
+
+describe('readApiMessage via the response interceptor', () => {
+  const reject = async (status, data) => {
+    const stub = stubNetwork({ status, body: data })
+    try {
+      await getTrip('1')
+      throw new Error('expected a rejection')
+    } catch (error) {
+      return error.message
+    } finally {
+      resetNetwork()
+      void stub
+    }
+  }
+
+  it('shows a short DRF detail as-is', async () => {
+    expect(await reject(404, { detail: 'Trip not found.' })).toBe('Trip not found.')
+  })
+
+  it('never renders a server error page, so tracebacks stay out of the UI', async () => {
+    const traceback = `BadStatusLine at /api/trips/plan\n${'Traceback line\n'.repeat(80)}`
+    expect(await reject(500, traceback)).toBe(
+      'The planning service hit an unexpected error (HTTP 500). Please try again.',
+    )
+  })
+
+  it('never renders an HTML error body', async () => {
+    expect(await reject(502, '<html><body>Bad Gateway</body></html>')).toBe(
+      'The planning service hit an unexpected error (HTTP 502). Please try again.',
+    )
   })
 })

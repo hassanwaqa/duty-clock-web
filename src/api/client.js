@@ -5,12 +5,18 @@ export const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+const MAX_MESSAGE_LENGTH = 300
+
 // DRF reports failures as {detail}, {error}, or {field: [messages]} depending on
 // where they were raised. Flattening them here means every screen can just show
 // error.message instead of re-guessing the shape.
 function readApiMessage(data) {
   if (!data) return null
-  if (typeof data === 'string') return /^\s*</.test(data) ? null : data
+  if (typeof data === 'string') {
+    const trimmed = data.trim()
+    if (!trimmed || trimmed.startsWith('<') || trimmed.length > MAX_MESSAGE_LENGTH) return null
+    return trimmed
+  }
   if (data.detail) return data.detail
   if (data.error) return data.error
   if (data.message) return data.message
@@ -25,8 +31,13 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
+      const { status } = error.response
       const message = readApiMessage(error.response.data)
-      error.message = message ?? `Request failed with status ${error.response.status}`
+      error.message =
+        message ??
+        (status >= 500
+          ? `The planning service hit an unexpected error (HTTP ${status}). Please try again.`
+          : `Request failed with status ${status}`)
     } else if (error.code === 'ERR_NETWORK') {
       error.message = 'Could not reach the planning service. Check that the API is running.'
     }
