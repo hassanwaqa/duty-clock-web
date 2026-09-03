@@ -1,8 +1,6 @@
 import { Box, Card, CardContent, Skeleton, Stack } from '@mui/material'
 import { layout, radius } from '../../lib/designTokens'
 
-// Mirrors the result page's own layout so the wait previews the structure the
-// trip is about to fill in, rather than replacing it with a spinner.
 export default function LoadingState() {
   return (
     <Stack spacing={4} aria-busy="true" aria-label="Loading trip plan">

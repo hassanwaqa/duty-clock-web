@@ -7,9 +7,6 @@ export const apiClient = axios.create({
 
 const MAX_MESSAGE_LENGTH = 300
 
-// DRF reports failures as {detail}, {error}, or {field: [messages]} depending on
-// where they were raised. Flattening them here means every screen can just show
-// error.message instead of re-guessing the shape.
 function readApiMessage(data) {
   if (!data) return null
   if (typeof data === 'string') {
@@ -45,8 +42,6 @@ apiClient.interceptors.response.use(
   },
 )
 
-// A cancelled request is an intentional teardown and a 4xx is a deterministic
-// answer; retrying either only doubles the traffic and the time to show an error.
 export function shouldRetryRequest(failureCount, error, maxRetries = 1) {
   if (error?.code === 'ERR_CANCELED' || error?.name === 'CanceledError') return false
 

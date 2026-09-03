@@ -1,8 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 
-// A form's section divider rather than a floating heading: the label sits on
-// the rule, the way headings are printed across a paper log.
 export default function SectionRule({ children, action, id }) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>

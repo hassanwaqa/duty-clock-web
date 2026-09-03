@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { LEG_TITLES, STOP_LABELS } from '../../lib/constants'
 import { formatDurationWords } from '../../lib/time'
 
-// Same wording as the trip schedule, so both sections name the legs alike.
 const legTitle = (leg) =>
   LEG_TITLES[`${leg.from}>${leg.to}`] ??
   `${STOP_LABELS[leg.from] ?? leg.from} → ${STOP_LABELS[leg.to] ?? leg.to}`
@@ -70,8 +69,6 @@ export default function RouteInstructions({ legs, onStepHover }) {
                     gap: 1.5,
                     alignItems: 'baseline',
                     py: 1.25,
-                    // Full-bleed square highlight: a rounded inset block leaves
-                    // the next row's divider cutting across its corners.
                     px: { xs: 2, sm: 2.5 },
                     mx: { xs: -2, sm: -2.5 },
                     outline: 'none',

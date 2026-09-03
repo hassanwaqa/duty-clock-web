@@ -3,9 +3,6 @@ import { DUTY_STATUS, LEG_TITLES, PICKUP_NOTE, STOP_LABELS } from './constants'
 const placeName = (point, stops) =>
   stops.find((stop) => stop.type === point)?.label ?? STOP_LABELS[point] ?? point
 
-// The API numbers its routed legs but does not tag duty segments with one, so
-// the pickup event is the boundary: everything up to it runs to the pickup, and
-// everything after it runs loaded to the dropoff.
 export function splitSegmentsByLeg(segments = [], legs = [], stops = []) {
   const ungrouped = [{ key: 'all', leg: null, title: null, from: null, to: null, segments }]
   if (!Array.isArray(legs) || legs.length < 2) return ungrouped
@@ -30,9 +27,6 @@ export function splitSegmentsByLeg(segments = [], legs = [], stops = []) {
   ].filter((group) => group.segments.length > 0)
 }
 
-// Events are placed by how far along the leg the driver had travelled when they
-// happened, not by how long they last — so a 10-hour rest and a 30-minute break
-// both sit at the mile marker where the truck actually stopped.
 export function legEventPositions(segments = [], legDistanceMiles = 0) {
   if (!(legDistanceMiles > 0)) return []
 

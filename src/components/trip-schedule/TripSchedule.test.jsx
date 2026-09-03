@@ -91,11 +91,9 @@ const STOPS = [
 
     expect(screen.getByText('Leg 1 · Deadhead to pickup')).toBeTruthy()
     expect(screen.getByText('Leg 2 · Loaded to dropoff')).toBeTruthy()
-    // endpoints are labelled under each leg's mileage bar
     expect(screen.getAllByText('Des Moines, IA').length).toBeGreaterThan(0)
     expect(screen.getByText('Omaha, NE')).toBeTruthy()
 
-    // The pickup closes the first leg; only the run after it belongs to the second.
     const lists = screen.getAllByRole('list')
     expect(lists).toHaveLength(2)
     expect(lists[0].querySelectorAll('li')).toHaveLength(3)

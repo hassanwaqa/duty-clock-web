@@ -110,10 +110,6 @@ function formatMinutes(minutes) {
   return `${Math.floor(minutes / 60)}:${pad(minutes % 60)}`
 }
 
-// Rounding each row to the nearest minute on its own lets the four printed
-// totals miss the day's total by a minute, which reads as an arithmetic error
-// to anyone adding up the column. Hand the leftover minutes to the rows with
-// the largest dropped fractions so the column always foots.
 export function formatShortDayLabel(key) {
   return new Date(`${key}T00:00:00Z`).toLocaleDateString('en-US', {
     timeZone: 'UTC',
@@ -274,9 +270,6 @@ export function splitSegmentsByDay(segments = [], timezone = 'UTC') {
         : 0
       const piece = {
         ...segment,
-        // A multi-day segment is clipped into one piece per log sheet. Keep
-        // its true boundaries so cycle recaps can tell which piece actually
-        // completes a 34-hour restart.
         sourceStart: segment.start,
         sourceEnd: segment.end,
         start: pieceStart.toISOString(),
@@ -298,8 +291,6 @@ export function splitSegmentsByDay(segments = [], timezone = 'UTC') {
     .map(([key, pieces]) => ({
       dayKey: key,
       timezone,
-      // A daily log covers all 24 hours. Time outside reported plan segments
-      // is shown as implied off duty and disclosed as a planning assumption.
       segments: withImpliedOffDuty(
         key,
         [...pieces].sort((a, b) => a.startHour - b.startHour),

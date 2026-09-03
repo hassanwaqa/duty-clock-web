@@ -28,8 +28,6 @@ export const STATUS_SHORT_LABELS = {
   [DUTY_STATUS.ON_DUTY]: 'On',
 }
 
-// The single source of status colour for the grid, the remarks strip and the
-// map — a status must look the same everywhere it appears.
 export const STATUS_COLORS = {
   [DUTY_STATUS.OFF_DUTY]: colors.slate,
   [DUTY_STATUS.SLEEPER_BERTH]: colors.plum,
@@ -61,14 +59,11 @@ export const BREAK_NOTE = '30-minute break'
 export const FUEL_NOTE = 'Fuel stop'
 export const PICKUP_NOTE = 'Pickup'
 
-// Leg endpoints come back as point names; a dispatcher reads them as the two
-// halves of the run — empty to the pickup, loaded to the dropoff.
 export const LEG_TITLES = {
   'current>pickup': 'Deadhead to pickup',
   'pickup>dropoff': 'Loaded to dropoff',
 }
 
-// Plain-language notes for reviewers who do not work to the federal rules daily.
 export const HOS_HINTS = {
   cycle:
     'The 70-hour / 8-day cycle: a driver may not be on duty more than 70 hours across any 8 consecutive days. Driving and on-duty time both count; off-duty and sleeper time do not.',

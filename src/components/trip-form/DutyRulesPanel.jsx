@@ -32,15 +32,9 @@ const DUTY_PATH = SEGMENTS.map((segment, index) => {
   const y = rowY(segment.status)
   const start = `${hourX(segment.start)},${y}`
   const end = `${hourX(segment.end)},${y}`
-  // index 0 moves to the start point; every later segment's L to its own
-  // start point is what draws the vertical connector from the previous row.
   return index === 0 ? `M${start}L${end}` : `L${start}L${end}`
 }).join('')
 
-// A hard-stop gradient along the x-axis, so the single animated path shows
-// each segment in its true status colour instead of one flat accent — the
-// legend swatches below read straight off this same STATUS_COLORS map, so
-// the sample and its legend can never disagree on what a colour means.
 const GRADIENT_STOPS = SEGMENTS.flatMap((segment) => {
   const color = STATUS_COLORS[segment.status]
   return [
@@ -49,8 +43,6 @@ const GRADIENT_STOPS = SEGMENTS.flatMap((segment) => {
   ]
 })
 
-// Every limit the scheduling engine applies, with the values it actually uses
-// (hos/constants.py) — not a restatement of the app's own feature list.
 const RULES = [
   ['Driving limit', '11 h'],
   ['On-duty window', '14 h'],
@@ -78,7 +70,6 @@ export default function DutyRulesPanel() {
           '100%': { strokeDashoffset: 0, opacity: 0 },
         },
         '& .duty-line': { animation: 'drawDuty 9s ease-in-out infinite' },
-        // Planning is the same day, recorded in a hurry.
         '&[data-planning="true"] .duty-line': { animationDuration: '2.1s' },
         '@media (prefers-reduced-motion: reduce)': {
           '& .duty-line': { animation: 'none', strokeDashoffset: 0 },

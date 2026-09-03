@@ -47,7 +47,6 @@ describe('TripSummaryCard', () => {
     expect(screen.getByText('36 hours 48 min')).toBeTruthy()
     expect(screen.getByText('Total elapsed')).toBeTruthy()
     expect(screen.getByText('13 hours')).toBeTruthy()
-    // Arrival keeps its trip-local zone, split across figure and sub-line.
     expect(screen.getByText('Arrival')).toBeTruthy()
     expect(screen.getByText('20:00')).toBeTruthy()
     expect(screen.getByText(/Tue, Sep 1 · CDT/)).toBeTruthy()

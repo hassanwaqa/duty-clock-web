@@ -9,8 +9,6 @@ const monoFigures = {
   fontVariantNumeric: 'tabular-nums',
 }
 
-// Micro-labels are set in condensed caps, the way headings are stamped on real
-// duty paperwork — it reads as typeset rather than as a UI kit default.
 const stampLabel = {
   fontFamily: fonts.condensed,
   fontSize: 11,
@@ -64,15 +62,12 @@ export const theme = createTheme({
       styleOverrides: {
         body: { WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale' },
 
-        // The log grid's quarter-hour ticks, reused as the app's divider motif.
         '.tick-rule': {
           height: 5,
           backgroundImage: tickRule(),
           backgroundRepeat: 'repeat-x',
           backgroundPosition: 'bottom',
         },
-        // MUI component classes are injected after CssBaseline, so a plain
-        // `display: none` here loses to `.MuiStack-root { display: flex }`.
         '.print-only': { display: 'none !important' },
 
         '@page': { size: 'landscape', margin: '6mm' },
@@ -104,8 +99,6 @@ export const theme = createTheme({
           '.log-sheet-card .MuiCardContent-root': { padding: '0 !important' },
         },
 
-        // Leaflet ships its own chrome; restyling it here keeps the map inside
-        // the same design system as everything drawn with MUI.
         '.leaflet-container': { fontFamily: fonts.sans, background: colors.paper },
         '.leaflet-popup-content-wrapper': {
           borderRadius: radius,
@@ -138,8 +131,6 @@ export const theme = createTheme({
 
     MuiPaper: { defaultProps: { elevation: 0 }, styleOverrides: { root: { backgroundImage: 'none' } } },
 
-    // Cards are deliberately flat, but floating surfaces must lift off the page
-    // or a dropdown reads as loose text sitting on top of the form.
     MuiAutocomplete: {
       styleOverrides: {
         paper: { ...overlaySurface, marginTop: 6 },
@@ -227,9 +218,6 @@ export const theme = createTheme({
       },
     },
 
-    // Lift labels out of Material's notched outline and stamp them above the
-    // field, the way a paper form prints its field captions. Done in the theme
-    // so no call site has to know about it and `label` stays the accessible name.
     MuiInputLabel: {
       defaultProps: { shrink: true },
       styleOverrides: {

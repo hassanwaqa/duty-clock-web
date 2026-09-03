@@ -47,8 +47,6 @@ describe('trip request behaviour', () => {
   it('renders a trip seeded by the planner without an immediate GET', async () => {
     const net = stubNetwork({ body: TRIP })
     const client = makeClient()
-    // Seeded with the numeric id the API returns; read with the string id the
-    // router provides — the shared key builder has to bridge the two.
     client.setQueryData(tripQueryKey(TRIP.id), TRIP)
 
     mount(client, <TripProbe id="1" />)

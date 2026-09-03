@@ -36,8 +36,6 @@ Stop.propTypes = {
   isLast: PropTypes.bool,
 }
 
-// Figures sit in ruled cells, the way boxed fields are printed on a duty log —
-// not as a grid of floating stat tiles.
 function Cell({ label, value, sub, hint }) {
   return (
     <Box
@@ -45,8 +43,6 @@ function Cell({ label, value, sub, hint }) {
         px: { xs: 1.75, md: 2.25 },
         py: 1.5,
         bgcolor: 'background.paper',
-        // Flex rather than grid: the final row stretches to fill, so a wrapped
-        // set never leaves an empty track showing the rule colour behind it.
         flex: '1 1 168px',
         minWidth: 0,
       }}
@@ -102,8 +98,6 @@ const trim = (value) => value.toFixed(2).replace(/\.00$/, '')
 
 export default function TripSummaryCard({ trip }) {
   const metrics = calculateTripMetrics(trip.segments, trip.current_cycle_used)
-  // Counting distinct segment start dates would miss a day spent entirely
-  // inside one long rest, so use the same splitter that builds the log sheets.
   const dayCount = splitSegmentsByDay(trip.segments, trip.timezone).length
 
   const arrival = metrics.expectedArrival ? new Date(metrics.expectedArrival) : null

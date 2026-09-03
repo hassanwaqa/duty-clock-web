@@ -2,8 +2,6 @@ import { apiClient } from '../api/client'
 
 const realAdapter = apiClient.defaults.adapter
 
-// Swaps axios's transport for a controllable one so tests can observe the real
-// client -> trips -> hook chain (including abort handling) without a network.
 export function stubNetwork({ delayMs = 0, status = 200, body = {} } = {}) {
   const calls = []
   let inFlight = 0

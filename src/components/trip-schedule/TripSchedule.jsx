@@ -50,8 +50,6 @@ function ScheduleRow({ segment, timezone, showDivider, onHover }) {
         gridTemplateColumns: { xs: '18px minmax(0, 1fr)', sm: '18px minmax(0, 1fr) auto' },
         columnGap: 1.5,
         alignItems: 'start',
-        // Bleed to the card's edges so the highlight is a full-width band with
-        // square edges; a rounded inset block collides with the row dividers.
         py: 1.5,
         px: 3,
         mx: -3,

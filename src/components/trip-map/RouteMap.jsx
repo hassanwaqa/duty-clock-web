@@ -16,8 +16,6 @@ import { formatDurationWords, formatHHMM } from '../../lib/time'
 
 const US_CENTER = [39.5, -98.35]
 
-// Leaflet's bundled PNG pins can't be themed, so each stop gets a pin drawn in
-// the same palette the rest of the app uses.
 const pinFor = (type) =>
   L.divIcon({
     className: '',
