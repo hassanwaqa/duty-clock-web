@@ -195,7 +195,7 @@ export const theme = createTheme({
       defaultProps: { disableElevation: true },
       styleOverrides: {
         root: { borderRadius: radius, paddingInline: 18 },
-        sizeLarge: { paddingBlock: 13, fontSize: 13 },
+        sizeLarge: { paddingBlock: 11, fontSize: 13 },
         containedPrimary: { '&:hover': { backgroundColor: '#000000' } },
         outlined: {
           borderColor: colors.ruleStrong,
@@ -214,7 +214,12 @@ export const theme = createTheme({
           '&:hover fieldset': { borderColor: colors.ruleStrong },
           '&.Mui-focused .MuiSvgIcon-root': { color: colors.ink },
         },
-        input: { fontSize: 14.5 },
+        input: {
+          fontSize: 14.5,
+          paddingTop: 10.5,
+          paddingBottom: 10.5,
+          '&::placeholder': { color: colors.inkMuted, opacity: 1 },
+        },
         notchedOutline: {
           top: 0,
           '& legend': { display: 'none' },
@@ -234,7 +239,7 @@ export const theme = createTheme({
           transform: 'none',
           maxWidth: '100%',
           color: colors.inkMuted,
-          marginBottom: 5,
+          marginBottom: 3,
           '&.Mui-focused': { color: colors.ink },
           '&.Mui-error': { color: colors.rust },
         },

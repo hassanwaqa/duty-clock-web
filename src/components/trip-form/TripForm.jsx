@@ -97,7 +97,7 @@ export default function TripForm() {
 
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
-      <Stack spacing={2.5}>
+      <Stack spacing={2}>
         <Box>
           <Typography
             variant="overline"
@@ -105,7 +105,7 @@ export default function TripForm() {
           >
             Route
           </Typography>
-          <Stack spacing={1.75} sx={{ mt: 1.75 }}>
+          <Stack spacing={1.25} sx={{ mt: 1.25 }}>
             <LocationAutocomplete
               label="Current location"
               placeholder="Chicago, IL"
@@ -163,11 +163,20 @@ export default function TripForm() {
             error={Boolean(fieldErrors.cycleUsed)}
             helperText={fieldErrors.cycleUsed}
             slotProps={{
-              input: adornment(SpeedRoundedIcon),
+              input: {
+                ...adornment(SpeedRoundedIcon),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Typography variant="caption" sx={{ color: 'text.secondary', whiteSpace: 'nowrap' }}>
+                      {`hrs of ${CYCLE_LIMIT}`}
+                    </Typography>
+                  </InputAdornment>
+                ),
+              },
               htmlInput: { min: 0, max: CYCLE_LIMIT, step: 0.25 },
             }}
             fullWidth
-            sx={{ mt: 1.75 }}
+            sx={{ mt: 1.25 }}
           />
         </Box>
 
@@ -183,16 +192,14 @@ export default function TripForm() {
         >
           <AccordionSummary
             expandIcon={<ExpandMoreRoundedIcon />}
-            sx={{ px: 2, minHeight: 54, '& .MuiAccordionSummary-content': { my: 1.25 } }}
+            sx={{ px: 2, minHeight: 44, '& .MuiAccordionSummary-content': { my: 1 } }}
           >
-            <Box>
-              <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                Log sheet details
-              </Typography>
-              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                Optional · leave blank if not available
-              </Typography>
-            </Box>
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              Log sheet details
+              <Box component="span" sx={{ fontWeight: 400, color: 'text.secondary' }}>
+                {'  ·  optional'}
+              </Box>
+            </Typography>
           </AccordionSummary>
           <AccordionDetails sx={{ px: 2, pt: 0, pb: 2 }}>
             <Box
@@ -233,7 +240,7 @@ export default function TripForm() {
 
         {isPending && (
           <Typography variant="caption" sx={{ color: 'text.secondary', textAlign: 'center' }}>
-            Geocoding stops and building log sheets — this can take a few seconds.
+            Geocoding stops and building log sheets. Usually just a few seconds.
           </Typography>
         )}
       </Stack>

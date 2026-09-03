@@ -151,7 +151,7 @@ export default function RouteMap({ routeGeometry, stops, segments, timezone, hig
                       variant="caption"
                       sx={{ display: 'block', mt: 0.5, color: STATUS_COLORS[duty.status] }}
                     >
-                      {duty.note ? `${duty.note} — ${duty.text}` : duty.text}
+                      {duty.note ? `${duty.note} · ${duty.text}` : duty.text}
                     </Typography>
                   )}
                 </Popup>

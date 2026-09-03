@@ -1,75 +1,89 @@
 import { Box, Container, Typography } from '@mui/material'
-import AppMasthead from '../components/common/AppMasthead'
-import HaulPanel from '../components/trip-form/HaulPanel'
+import BrandMark from '../components/common/BrandMark'
+import ColumnHeader from '../components/common/ColumnHeader'
+import DutyRulesPanel from '../components/trip-form/DutyRulesPanel'
+import { colors, layout, tickRule } from '../lib/designTokens'
 import TripForm from '../components/trip-form/TripForm'
-import { colors, layout } from '../lib/designTokens'
 
-const FOLD = `calc(100vh - ${layout.mastheadOffset}px)`
+const TICK_HEIGHT = 5
+const BORDER_HEIGHT = 1
+
+function SideChrome({ side, bg, tickColor, borderColor }) {
+  const edge =
+    side === 'left'
+      ? { left: 0, right: { xs: 0, md: '50%' } }
+      : { left: '50%', right: 0 }
+  return (
+    <Box aria-hidden="true" sx={{ position: 'absolute', inset: 0, display: { xs: side === 'left' ? 'block' : 'none', md: 'block' }, ...edge }}>
+      <Box sx={{ position: 'absolute', inset: 0, bgcolor: bg }} />
+      <Box
+        sx={{
+          position: 'absolute',
+          top: `${layout.mastheadHeight}px`,
+          left: 0,
+          right: 0,
+          height: `${TICK_HEIGHT}px`,
+          backgroundImage: tickRule(tickColor),
+          backgroundRepeat: 'repeat-x',
+          backgroundPosition: 'bottom',
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          top: `${layout.mastheadHeight + TICK_HEIGHT}px`,
+          left: 0,
+          right: 0,
+          height: `${BORDER_HEIGHT}px`,
+          bgcolor: borderColor,
+        }}
+      />
+    </Box>
+  )
+}
 
 export default function TripFormPage() {
   return (
-    <>
-      <AppMasthead stamp="Hours-of-service trip planner" />
-      <Box component="section" sx={{ position: 'relative', minHeight: { md: FOLD } }}>
+    <Box component="section" sx={{ position: 'relative', minHeight: '100vh' }}>
+      <SideChrome side="left" bg={colors.paper} tickColor={colors.rule} borderColor={colors.rule} />
+      <SideChrome side="right" bg={colors.ink} tickColor={colors.panelRule} borderColor={colors.panelRule} />
+
+      <Container maxWidth="lg" sx={{ position: 'relative' }}>
         <Box
-          aria-hidden="true"
-          sx={{ position: 'absolute', inset: 0, right: { xs: 0, md: '50%' }, bgcolor: 'background.paper' }}
-        />
-        <Box
-          aria-hidden="true"
           sx={{
-            display: { xs: 'none', md: 'block' },
-            position: 'absolute',
-            inset: 0,
-            left: '50%',
-            bgcolor: colors.ink,
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+            minHeight: { md: '100vh' },
           }}
-        />
-
-        <Container maxWidth="lg" sx={{ position: 'relative' }}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-              minHeight: { md: FOLD },
-            }}
-          >
-            <Box sx={{ py: { xs: 4, md: 4 }, pr: { md: 5 } }}>
-              <Typography variant="stamp" sx={{ color: 'text.secondary', display: 'block', mb: 1.25 }}>
-                Form · 49 CFR 395.8
-              </Typography>
-              <Typography variant="h1" component="h1" sx={{ mb: { xs: 1.25, md: 3 } }}>
-                Plan a trip
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ color: 'text.secondary', mb: 2.5, display: { xs: 'block', md: 'none' } }}
-              >
-                Enter the route and hours already used in the 70-hour / 8-day cycle. You&apos;ll get
-                the mapped route and a driver&apos;s daily log sheet for every day the trip spans.
-              </Typography>
-
-              <TripForm />
-            </Box>
-
-            <Box sx={{ display: { xs: 'none', md: 'block' }, pl: 5 }}>
-              <Box
-                sx={{
-                  position: 'sticky',
-                  top: `${layout.mastheadOffset}px`,
-                  minHeight: FOLD,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  py: 4,
-                }}
-              >
-                <HaulPanel />
+        >
+          <Box sx={{ pb: 3.5, pr: { md: 5 } }}>
+            <ColumnHeader>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, width: '100%' }}>
+                <BrandMark />
+                <Typography variant="stamp" sx={{ color: 'text.secondary', whiteSpace: 'nowrap' }}>
+                  Form · 49 CFR 395.8
+                </Typography>
               </Box>
+            </ColumnHeader>
+
+            <Typography variant="h1" component="h1" sx={{ mb: 1.25 }}>
+              Plan a trip
+            </Typography>
+            <Typography variant="body1" sx={{ color: 'text.secondary', mb: 2.5 }}>
+              Give it three locations and your cycle hours. You&apos;ll get a routed map, a
+              day-by-day schedule and a log sheet for every day the trip spans.
+            </Typography>
+
+            <TripForm />
+          </Box>
+
+          <Box sx={{ display: { xs: 'none', md: 'block' }, pl: 5 }}>
+            <Box sx={{ position: 'sticky', top: 0, pb: 4 }}>
+              <DutyRulesPanel />
             </Box>
           </Box>
-        </Container>
-      </Box>
-    </>
+        </Box>
+      </Container>
+    </Box>
   )
 }

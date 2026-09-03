@@ -30,6 +30,11 @@ export const colors = {
   rust: '#9A3324',
   rustDark: '#79271B',
   rustSoft: '#F6EBE7',
+  panelBg: '#1A1917',
+  panelRule: 'rgba(255, 255, 255, 0.14)',
+  panelInk: '#E8E2D4',
+  panelInkMuted: '#9A9280',
+  panelAmber: '#C08427',
 }
 
 export const fonts = {
