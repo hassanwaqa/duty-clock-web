@@ -176,11 +176,11 @@ export default function LogGrid({ daySegments, totals, timezone }) {
                 <Typography variant="mono" sx={{ display: 'block', color: 'inherit' }}>
                   {`${formatHHMM(segment.start, timezone)} – ${formatHHMM(segment.end, timezone)}`}
                 </Typography>
-                <Typography variant="caption" sx={{ display: 'block', fontWeight: 600 }}>
+                <Typography variant="caption" sx={{ display: 'block', color: 'inherit', fontWeight: 600 }}>
                   {STATUS_LABELS[segment.status]}
                 </Typography>
                 {segment.location && (
-                  <Typography variant="caption" sx={{ display: 'block', opacity: 0.75 }}>
+                  <Typography variant="caption" sx={{ display: 'block', color: 'inherit', opacity: 0.9 }}>
                     {[segment.location, segment.note].filter(Boolean).join(' · ')}
                   </Typography>
                 )}

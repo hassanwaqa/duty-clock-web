@@ -256,9 +256,14 @@ export const theme = createTheme({
       styleOverrides: {
         tooltip: {
           background: colors.ink,
+          color: colors.surface,
           borderRadius: radius - 4,
-          padding: '8px 10px',
-          fontSize: 12.5,
+          padding: '9px 11px',
+          fontSize: 13,
+          fontWeight: 500,
+          lineHeight: 1.45,
+          boxShadow: '0 6px 18px rgba(26, 25, 23, 0.24)',
+          '& .MuiTypography-root': { color: 'inherit' },
         },
         arrow: { color: colors.ink },
       },
